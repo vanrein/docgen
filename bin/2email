@@ -1,0 +1,73 @@
+#!/bin/sh
+
+BOUNDARY=`head /dev/urandom | openssl md5`
+# BOUNDARY='----8<------------8<-------'
+DATE=`date`
+SENDER='sales@openfortress.nl'
+SENDERNAME='Rick van Rein'
+SENDERBCC='sales@openfortress.nl'
+RECIPIENT=''
+DRAFTBOX=/tmp/bills
+
+cd `dirname $1`
+
+echo q | /usr/bin/pdflatex $1.tex 2>/dev/null >/dev/null
+
+cat >>/tmp/bills <<EOF
+From $SENDER $DATE
+From: $SENDERNAME <$SENDER>
+To: $RECIPIENT
+Bcc: $SENDERBCC
+Subject: Factuur in digitale vorm
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="$BOUNDARY"
+Content-Disposition: inline
+X-Mutt-PGP: S
+
+
+--$BOUNDARY
+Content-Type: text/plain; charset=us-ascii
+Content-Description: Begeleidende uitleg
+Content-Disposition: inline
+
+Hallo,
+
+Aan deze email hangt een PDF met een factuur.
+Gelieve de erin vermelde betalingsinstructies op te volgen.
+
+Aangezien het een PDF is kan hij desgewenst gewoon worden afgedrukt
+en opgenomen in een papieren administratie.
+
+Deze email is digitaal ondertekend, omdat de Belastingdienst
+dat vereist voor electronisch verzonden facturen.  Desgewenst
+kan de ontvanger de ondertekening gebruiken om de herkomst van
+de factuur te valideren.  Daartoe is de gebruikte PGP key terug
+te vinden op:
+
+http://openfortress.nl/cgi-bin/pgplookup.cgi?search=rick@vanrein.org
+
+Voor vragen is een reply op deze email gewoon mogelijk.
+
+Alvast bedankt,
+
+Rick van Rein,
+OpenFortress
+
+--$BOUNDARY
+Content-Type: application/pdf
+Content-Description: Factuur in PDF-formaat
+Content-Disposition: attachment; filename="openfortress.pdf"
+Content-Transfer-Encoding: base64
+
+EOF
+openssl base64 -e -in $1.pdf >>/tmp/bills
+echo >>/tmp/bills
+echo "--$BOUNDARY--" >>/tmp/bills
+echo >>/tmp/bills
+
+rm -f $1*
+
+echo 'The bill was generated (in Dutch).'
+echo 'Please pick it up from the draft mailbox.'
+echo 'Do not forget to attach a digital signature!'
+

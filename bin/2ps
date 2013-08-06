@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cd `dirname $1`
+
+echo q | /usr/bin/latex $1.tex 2>/dev/null >/dev/null
+/usr/bin/dvips $1.dvi -o $1.ps 2>/dev/null >/dev/null
+
+cat $1.ps
+rm -f $1*

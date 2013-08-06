@@ -1,0 +1,13 @@
+#!/bin/sh
+
+cd `dirname $1`
+
+echo q | /usr/bin/latex $1.tex 2>/dev/null >/dev/null
+/usr/bin/dvips $1.dvi -o $1.ps 2>/dev/null >/dev/null
+
+
+lpr $1.ps
+echo 'Queue status:'
+lpq
+
+rm -f $1*

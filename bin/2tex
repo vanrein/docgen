@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cd `dirname $1`
+
+cat $1.tex
+rm -f $1*

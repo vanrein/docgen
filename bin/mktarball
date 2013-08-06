@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# mktarball --- invoke from docgen home directory to generate a .tar.gz
+#
+# By Rick van Rein
+
+DIR=`pwd`
+TARNAME=`basename $DIR`
+DIRNAME=`dirname $DIR`
+cd ..
+tar -czvf $DIR/$TARNAME.tar.gz				\
+		$TARNAME/README				\
+		$TARNAME/LICENSE			\
+		$TARNAME/index.html			\
+		$TARNAME/lib				\
+		$TARNAME/bin				\
+		$TARNAME/brief.php			\
+		$TARNAME/standaardbrief.php		\
+		$TARNAME/template/standaardbrief.php	\
+		$TARNAME/template/brief.php		\
+		$TARNAME/letter.php			\
+		$TARNAME/predefinedletter.php		\
+		$TARNAME/template/predefinedletter.php	\
+		$TARNAME/template/letter.php		

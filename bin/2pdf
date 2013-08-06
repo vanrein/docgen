@@ -1,0 +1,8 @@
+#!/bin/sh
+
+cd `dirname $1`
+
+echo q | /usr/bin/pdflatex $1.tex 2>/dev/null >/dev/null
+
+cat $1.pdf
+rm -f $1*

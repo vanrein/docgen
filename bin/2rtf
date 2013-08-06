@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cd `dirname $1`
+DOC=`basename $1`
+
+/usr/bin/latex2rtf -o "$DOC.rtf" $1.tex 2>&1 >>/tmp/null.tex
+
+cat "$DOC.rtf"
+rm -f $1*

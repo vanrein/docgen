@@ -1,0 +1,127 @@
+Document Generation Center
+==========================
+
+    This software uses LaTeX to perform high-quality formatting of
+    dynamic documents requested by a web client.
+
+
+Introduction
+------------
+
+The web is filled with content in HTML, but some applications require better
+formatting than the primitive formatting that browsers offer. Strangely,
+there is no webbish-dynamic approach to the generation of such high-quality
+dynamic documents.  So, here it is.
+
+To deliver the highest quality, this docgen utility uses LaTeX. It's a
+big advantage that LaTeX is a batch program too!
+
+The documents are generated from LaTeX documents with PHP insets. These
+insets may contain dynamic information, including even depency on such
+things as the browser-set language preferences!
+
+The lib/generate.php script is a generic script that can generate different
+forms of output, including PDF, PostScript, LaTeX and DVI. It passes on
+all variables that it receives in its URI.
+
+
+Version and Copyright
+---------------------
+
+This is version 0.0, not really a publication version yet.  It is not yet
+available for download or use by others, regardless of preliminary
+announcements you may find elsewhere in this document or others.
+Copyright 2000 Rick van Rein for now.
+But I'm a friendly guy, it won't hurt to ask if you want it :-)
+
+
+Files
+-----
+
+LICENSE		   The usual legal mumbo-jumbo. (GNU Public License)
+README		   That'd be me.
+brief.php	   The (rather) general  fill-out form for an example letter.
+standaardbrief.php The (rather) specific fill-out form for an example letter.
+bin/2*		   These are the actual transformation scripts for .tex inputs.
+bin/mktarball	   Script to generate the distributed version.
+template/	   The directory of all templates, including *brief.php.
+lib/generate.php   The generic script for document generation from a template.
+lib/error.php	   A page used when errors need to be reported by generate.php.
+lib/outputformats.php A form entry for the output file type selection.
+lib/settings.inc   The configuration file for generate.php.
+lib/locale.inc	   Support for depending on the browser's language preference.
+lib/opmaaktips.inc Dutch hints for `special effects' in LaTeX textfields.
+lib/websecurity.inc Avoid security leaks when LaTeX appears on the web.
+
+
+Make your own Dynamic Document
+------------------------------
+
+To make your own dynamic document, first write it in LaTeX. Then, replace the
+variable parts with PHP code, using any variables that you like, except the
+reserved ones.
+
+Currently, reserved variables are $out, $template and $langidx. And of course
+all special variables in use by PHP and Apache themselves.
+
+Make a web form in which the variables are filled out. Include the file
+lib/outputformats.php in the form, as well as a hidden input type
+	<INPUT TYPE=HIDDEN NAME=template VALUE=xxx>
+where the name of your template goes in xxx. Your lib/settings.inc tells you
+what is prefixed and postfixed to xxx to form the template URI.
+
+Now tell your form to use the GET method, and define ACTION=lib/generate.php
+and it should all work!
+
+Be smart, and always set up your web form in PHP, since you seem to have that
+supported anyway. A PHP file can just be HTML, but it can in the future be
+extended to much smarter things, automatically guessing defaults, for example
+filling in a date as a default entry.
+
+Another hint: Make your forms look their best on lynx on a 80x2[45] terminal.
+Filling out out forms is *much* more pleasant in lynx than in any graphical
+browser!
+
+
+Security
+--------
+
+LaTeX allows rather powerful commands, including those that manipulate files.
+To avoid opening security holes, these commands should not be made available
+to web clients. It would be very simple to enter a command like
+	\input{/etc/passwd}
+in a name entry field, so we must avoid this.
+
+To do so, your should insert a PHP statement
+	require ('../lib/websecurity.inc');
+after all legal file actions (notably, the \usepackage statements you need) and
+before the first insertion of a variable provided as a script parameter.
+
+
+Links and Further Information
+-----------------------------
+
+Please read the index.html file for a browser's introduction to docgen.
+
+Docgen is made by Rick van Rein.
+If you like docgen, or find an interesting application, be sure to drop me a
+line on <vanrein@zonnet.nl>
+
+The examples provided make heavy use of Victor Eijkhout's Dutch letter style,
+which makes really impressive letters.
+
+LaTeX, this utility, and Victor Eijkhout's document class are all available
+on CTAN, http://www.ctan.org.
+
+PHP is a programming language used chiefly to make web pages (very) dynamic.
+It also serves quite well to demonstrate that Open Source development leads to
+far better (more powerful *and* more efficient) products than the obvious
+Commercial Alternative. PHP is (very) well documented (another better point)
+on http://php.net
+
+Finally, PHP works best in Apache. Apache's success story is quite similar
+to PHP's. Apache is found at http://www.apache.org.
+
+
+Enjoy,
+ -Rick van Rein.
